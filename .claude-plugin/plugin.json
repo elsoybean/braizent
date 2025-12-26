@@ -1,0 +1,15 @@
+{
+  "name": "braizent",
+  "description": "A meal planning and recipe recommendation plugin.",
+  "version": "0.0.1",
+  "author": {
+    "name": "Chris Lee",
+    "email": "cmlee1014@gmail.com",
+    "url": "https://github.com/elsoybean"
+  },
+  "homepage": "https://github.com/elsoybean/braizent",
+  "repository": "https://github.com/elsoybean/braizent",
+  "license": "GPLv3",
+  "keywords": ["meal-planning", "recipe", "food"],
+  "skills": "./skills/"
+}
