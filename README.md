@@ -209,6 +209,37 @@ This plugin provides modular skills following the **Agent Skills Open Standard**
 
 **Location**: `skills/suggest-meal/` (in this plugin)
 
+#### `quick-meal-pick`
+**Purpose**: Fast, cost-optimized meal suggestion from local recipes (streamlined alternative to suggest-meal).
+
+**Capabilities**:
+- Quick tag-based search of local recipe collection
+- Standard side dish pairing using template rules
+- Minimal questions for fast decisions
+- Uses fast models for 85-90% cost savings vs. suggest-meal
+- Best for routine meals where any appropriate recipe works
+
+**How it works**:
+1. Gathers basic criteria (time, cuisine, protein) in single question batch
+2. Searches local recipes by tags (mechanical search)
+3. Applies standard side dish pairing rules by cuisine
+4. Presents suggestion with option to add to shopping list
+5. Falls back to full suggest-meal if no local matches
+
+**Cost comparison**:
+- quick-meal-pick: ~$0.10-0.15 (fast model, tag search)
+- suggest-meal: ~$0.80-1.00 (capable model, context-aware reasoning)
+
+**When to use**:
+- ✅ Routine weeknight meals
+- ✅ Quick decision needed
+- ✅ Trust your recipe collection
+- ❌ Special occasions (use suggest-meal)
+- ❌ Need web search (use suggest-meal)
+- ❌ Want creative suggestions (use suggest-meal)
+
+**Location**: `skills/quick-meal-pick/` (in this plugin)
+
 #### `add-to-shopping-list`
 **Purpose**: Add ingredients for a specific meal to the appropriate shopping list with smart quantity tracking.
 
