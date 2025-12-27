@@ -58,6 +58,11 @@ Example: 'Wednesday January 8, Chicken and Dumplings, need to add the ingredient
 
 ## Step 3: Filter Out Pantry Staples
 
+**COST OPTIMIZATION:** This is a mechanical filtering task - perfect for fast agents! Consider spawning a task-optimized agent with the Task tool to:
+- Parse the ingredient list
+- Compare each ingredient against the profile's pantry staples list
+- Categorize into must_purchase / usually_have / always_have lists
+
 Compare the ingredient list against the user's pantry staples from their profile.
 
 **For each ingredient, determine:**
@@ -133,6 +138,12 @@ Rice (jasmine, 500g bag):
 
 ## Step 6: Smart Ingredient Allocation
 
+**COST OPTIMIZATION:** This algorithm-based task is perfect for fast agents! Consider spawning a task-optimized agent with the Task tool to:
+- Execute the allocation algorithm below
+- Check existing purchases and unclaimed quantities
+- Determine package sizes using the lookup tables
+- Update tracking notes
+
 For each ingredient in the `must_purchase` list, determine if it should be added or claimed from existing purchases.
 
 **Algorithm:**
@@ -163,61 +174,123 @@ For each ingredient needed (e.g., "200g jasmine rice"):
    - Update internal tracking of what's claimed
    - Include in the item's note in the shopping list
 
-**Package size considerations:**
-- Fresh produce: Buy by weight (500g broccoli, 1kg potatoes)
-- Proteins: Buy specific cuts/weights (1 whole chicken 1400-1600g)
-- Pantry goods: Buy standard packages (500g rice bag, 1L milk carton)
-- Specialty items: Note if only available in certain sizes
+**Package size considerations - Use These Standard Sizes:**
+
+## Standard Package Sizes (Use These Unless User Specifies Otherwise)
+
+### Dairy
+- Butter: 250g package (8.8 oz stick equivalent)
+- Milk: 1L carton
+- Heavy cream: 200ml or 500ml
+- Yogurt: 150g individual, 500g tub
+- Cheese (block): 200g or 400g
+- Cheese (grated): 200g bag
+
+### Pantry Dry Goods
+- Flour: 1kg bag (minimum)
+- Sugar: 1kg bag
+- Rice: 500g, 1kg, or 2kg bag
+- Pasta: 500g box
+- Dried beans: 500g bag
+
+### Canned Goods
+- Tomatoes (crushed/diced): 400g can
+- Coconut milk: 400ml can
+- Beans: 400g can
+- Broth/stock: 500ml or 1L carton
+
+### Fresh Produce (Practical Minimums)
+- Onions: Buy by unit (can buy 1-2 onions)
+- Garlic: Buy by head (can buy 1 head)
+- Fresh herbs: Buy by bunch (cannot buy less than 1 bunch)
+- Broccoli: Buy by head or in 500g minimum
+- Carrots: 500g bag minimum (or by unit for large carrots)
+- Potatoes: 1kg bag minimum (or by unit for large potatoes)
+- Leafy greens: Buy by bunch or bag (cannot buy by gram)
+
+### Proteins
+- Chicken breasts: Package of 2-4, typically 500g-1kg
+- Chicken thighs: Package of 4-6, typically 600g-1kg
+- Ground meat: 500g package minimum
+- Whole chicken: 1200-1800g typical range
+- Fish fillets: Buy by weight, 200g minimum per person typical
+
+### Specialty Items (Note If Larger Package Required)
+- If item only comes in large package (e.g., 1kg bag of specialty flour needed for 200g), note: "Buy [package size] - will have [X] remaining"
+
+### Decision Rules
+1. IF recipe needs < standard package size: Buy standard package, note remainder
+2. IF recipe needs > standard package size: Calculate how many packages needed
+3. IF produce can be bought by unit: Specify unit count not weight
+4. IF item has short shelf life: Only buy what's needed for the week
 
 ---
 
 ## Step 7: Determine Store Sections
 
-For each ingredient being added, determine which store section it belongs to.
+**COST OPTIMIZATION:** This is pure keyword matching and lookup - ideal for fast agents! Consider spawning a task-optimized agent with the Task tool to:
+- Match ingredients against the section mapping below
+- Apply the keyword matching algorithm
+- Check for profile overrides
+- Return section assignments
 
-**Common section mappings:**
+This straightforward categorization costs ~70% less with a fast model.
 
-**Produce:**
-- Fresh vegetables (broccoli, carrots, cabbage, etc.)
-- Fresh fruits
-- Fresh herbs
+For each ingredient being added, determine which store section it belongs to **using this exact mapping:**
 
-**Meat & Seafood:**
-- Fresh meats (chicken, pork, beef)
-- Sausages
-- Seafood
+## Store Section Assignment (Use This Exact Mapping)
 
-**Dairy & Eggs:**
-- Milk, cream, butter
-- Cheese
-- Eggs
-- Yogurt
+### Produce
+**ALL fresh vegetables, fruits, and herbs:**
+arugula, basil, bell pepper, broccoli, cabbage, carrot, celery, cilantro, cucumber, garlic, ginger, kale, lemon, lettuce, lime, mushroom, onion, orange, parsley, potato, rosemary, spinach, thyme, tomato, zucchini, apple, avocado, banana, etc.
 
-**Dry Goods & Pantry:**
-- Pasta, rice, noodles
-- Flour, sugar
-- Canned goods
-- Dried herbs and spices
+### Meat & Seafood
+**ALL fresh/frozen proteins:**
+bacon, beef, chicken, duck, fish, lamb, pork, sausage, seafood, shrimp, turkey, ground meat, steak, chops, etc.
 
-**Bakery / Bread:**
-- Bread, rolls
-- Baguettes
+### Dairy & Eggs
+**ALL dairy products and eggs:**
+butter, cheese (all types), cream, eggs, milk, sour cream, yogurt, cream cheese, cottage cheese, etc.
 
-**Frozen:**
-- Frozen vegetables
-- Frozen proteins
-- Ice cream
+### Dry Goods & Pantry
+**ALL shelf-stable dry goods:**
+baking powder, baking soda, beans (dried), breadcrumbs, cereal, cocoa powder, coffee, cornstarch, flour (all types), lentils, nuts, oats, oil (olive, vegetable, etc.), pasta, rice, spices (dried), sugar (all types), tea, vinegar, etc.
 
-**International / Specialty:**
-- Asian ingredients
-- Specialty items not in main sections
+### Canned & Jarred
+**ALL canned and jarred items:**
+beans (canned), broth (canned/boxed), coconut milk, jam, olives, pasta sauce, peanut butter, pickles, salsa, tomatoes (canned), tuna, artichoke hearts, capers, etc.
 
-**Other:**
-- Items that don't fit above categories
+### Condiments & Sauces
+**ALL bottled sauces and condiments:**
+fish sauce, honey, hot sauce, ketchup, maple syrup, mayonnaise, mustard, soy sauce, sriracha, worcestershire sauce, BBQ sauce, teriyaki sauce, etc.
 
-**Use profile information:**
-- User's profile may specify where certain items are found in their local stores
-- Respect their organizational preferences
+### Frozen
+**ALL frozen items (except proteins):**
+frozen vegetables, frozen fruit, ice cream, frozen pizza, frozen meals, frozen appetizers, etc.
+
+### Bakery / Bread
+**ALL fresh baked goods:**
+bagels, baguette, bread, croissants, dinner rolls, pita, tortillas, hamburger buns, etc.
+
+### International / Specialty
+**ALL ethnic/specialty ingredients not in main sections:**
+Asian ingredients (miso, rice vinegar, sesame oil, rice paper, etc.), specialty spices, ethnic ingredients, tahini, etc.
+
+### Beverages
+**ALL drinks (if shopping list includes):**
+juice, soda, sparkling water, wine, beer, etc.
+
+### Other
+**Anything that doesn't fit above categories OR user has specified custom location in profile**
+
+### Override Rule
+**IF user's PROFILE.md specifies where they buy something** (e.g., "Pollofino from Knuspr"), **use that instead of standard section**
+
+### Assignment Algorithm
+1. Match ingredient name against categories above (keyword matching)
+2. IF multiple matches, choose most specific category
+3. IF no match, use "Other" section
+4. IF profile specifies location/store, honor that first
 
 ---
 

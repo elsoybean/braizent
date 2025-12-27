@@ -117,23 +117,52 @@ Go through each component:
 
 ## Step 7: Determine Recipe Format
 
-Based on the source recipe and variant purpose, use the appropriate format:
+**Follow this decision tree to choose the appropriate format:**
 
-### Use Standard Recipe Format When:
-- Adding precision to a quick staple recipe
-- Creating a variant that will be shared with others unfamiliar with the dish
-- The user wants detailed, step-by-step instructions
+### Decision Tree for Format Selection
 
-### Use Quick Staple Format When:
-- Modifying an existing quick staple and keeping it flexible
-- The variant is still a personal memory aid, not for sharing
-- The user wants to preserve the flexible nature
+```
+1. Is the source recipe a Quick Staple?
+   YES → Go to 2
+   NO → Go to 4
 
-### Use Source Format When:
-- The source is a standard recipe and changes are minor
-- Format doesn't need to change, just content
+2. Is the variant adding precision for sharing?
+   YES → Use Standard Recipe Format (transition from flexible to precise)
+   NO → Go to 3
 
-**Ask the user which format makes sense if it's not obvious.**
+3. Does the variant need to stay flexible/personal?
+   YES → Use Quick Staple Format (keep flexible)
+   NO → Use Standard Recipe Format
+
+4. Is the source a Standard Recipe?
+   YES → Go to 5
+   NO → Ask user which format they prefer
+
+5. Are the changes minimal (just substitutions, small tweaks)?
+   YES → Use Standard Recipe Format (maintain precision)
+   NO → Go to 6
+
+6. Does the variant become significantly simpler/faster?
+   YES → Consider Quick Staple Format (optional - ask user)
+   NO → Use Standard Recipe Format
+```
+
+### Format Selection Rules
+
+**ALWAYS Use Standard Recipe Format When:**
+- Converting Quick Staple → Precise (for sharing)
+- Source is already Standard Recipe and changes don't simplify it drastically
+- Variant will be shared with people unfamiliar with the dish
+- User explicitly wants detailed instructions
+
+**ALWAYS Use Quick Staple Format When:**
+- Source is Quick Staple AND variant stays flexible
+- User wants to preserve memory-aid style
+- Changes don't add significant precision
+
+**Ask User When:**
+- Decision tree doesn't lead to clear answer
+- Variant is significantly simpler than detailed source (could go either way)
 
 ## Step 8: Create the Variant Recipe File
 

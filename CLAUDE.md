@@ -30,6 +30,8 @@ This document provides guidance for Claude (or any AI assistant) when working wi
 
 5. **Transparent & Inspectable**: Users should always be able to see what's in their files and change it manually if they prefer.
 
+6. **Cost-Conscious Execution**: Use the cheapest model appropriate for each task. Skills have been optimized with explicit lookup tables, algorithms, and decision trees to enable execution by cheaper models (Haiku) for mechanical tasks.
+
 ## Project Structure
 
 **This Plugin Repository:**
@@ -59,6 +61,151 @@ my-meals/ (user's project)
 ```
 
 **Note:** Skills from this plugin work with the user's data files in their own project directory.
+
+## Cost Optimization Strategy
+
+**CRITICAL**: Many skill tasks are mechanical and can be executed by faster, cheaper models. Always consider spawning task-optimized agents for straightforward work to reduce costs by ~70-80%.
+
+### When to Use Different Model Capabilities (via Task Tool)
+
+Use the Task tool to spawn agents, letting Claude select the most appropriate model based on task complexity. The agent system will use:
+
+#### ✅ Fast/Cheap Models for Mechanical Tasks
+These tasks follow explicit rules and don't require creative reasoning:
+- **Lookup table operations**: Unit conversions, package sizes, store sections
+- **Pattern matching**: Title reformatting, tag format validation
+- **List processing**: Filtering pantry staples, categorizing ingredients
+- **File operations**: Reading recipes, extracting ingredient lists
+- **Template filling**: Applying standard formats, markdown generation
+- **Comparison**: Checking existing shopping lists for duplicates
+- **Simple calculations**: Scaling recipe quantities, date arithmetic
+
+#### ⚠️ Capable/Premium Models for Complex Reasoning
+These tasks require judgment, creativity, or nuanced understanding:
+- **Creative judgment**: Recipe research, cuisine authenticity assessment
+- **Context-aware decisions**: Meal suggestions based on preferences/history
+- **Conversational interviews**: Profile building, user clarification
+- **Multi-perspective synthesis**: Research recipe comparisons
+- **Cultural sensitivity**: Authentic recipe source evaluation
+- **Ambiguity resolution**: Interpreting unclear user requests
+
+### How to Spawn Task-Optimized Agents
+
+Within skill execution, use the Task tool and let the agent system select the appropriate model tier:
+
+```markdown
+## Step 3: Convert Measurements (Spawn Task-Optimized Agent)
+
+**Use the Task tool to spawn an agent for this mechanical task:**
+
+Task(
+  description: "Convert imperial measurements to metric",
+  prompt: "Convert these measurements using the exact conversion table:
+
+  [paste conversion table from skill]
+
+  Ingredients to convert:
+  - 1 cup flour
+  - 2 tablespoons butter
+  - 350°F oven
+
+  Return converted measurements following the rounding rules."
+)
+```
+
+**Note**: The agent system will automatically use a fast/cheap model for this mechanical task. If a specific capability level is required, you can hint with `model: "haiku"` (fast) or `model: "sonnet"` (capable), but prefer letting the system decide.
+
+### Cost Savings Examples
+
+**import-recipe skill:**
+- Baseline (single capable model): $0.40-0.60
+- With fast agents for conversions/formatting/tags: $0.10-0.15 (70-75% savings)
+
+**add-to-shopping-list skill:**
+- Baseline (single capable model): $0.75-1.00
+- With fast agents for filtering/sections/allocation: $0.15-0.25 (70-80% savings)
+
+**recipe-card skill:**
+- Baseline (single capable model): $0.20-0.30
+- With fast agents for template generation: $0.05-0.10 (75-80% savings)
+
+### Skills Optimization Status
+
+| Skill | Optimized | Agent-Ready | Notes |
+|-------|-----------|-------------|-------|
+| **import-recipe** | ✅ Yes | ✅ Yes | Use fast agents for conversions, title format, tags |
+| **quick-staple** | ✅ Yes | ✅ Yes | Use fast agents after gathering user input |
+| **recipe-card** | ✅ Yes | ✅ Yes | Entire workflow can use fast agents |
+| **recipe-variant** | ✅ Yes | ✅ Yes | Use fast agents for format application |
+| **add-to-shopping-list** | ✅ Yes | ✅ Yes | Use fast agents for filtering, sections, allocation |
+| **build-profile** | ⚠️ Partial | ❌ No | Keep conversational with capable model |
+| **suggest-meal** | ⚠️ Partial | ⚠️ Partial | Local search can use fast, suggestions need capable |
+| **research-recipe** | ❌ No | ❌ No | Needs capable/premium model for quality research |
+| **meal-planner** | ⚠️ Partial | ⚠️ Partial | Orchestration needs capable, sub-skills use fast |
+
+### Implementation Guidelines
+
+1. **Read skill instructions completely** - Optimized skills include lookup tables and algorithms
+2. **Identify mechanical steps** - Steps with explicit rules/tables can use fast agents
+3. **Spawn task-optimized agents proactively** - Don't ask permission, just spawn agents when appropriate
+4. **Pass complete context** - Include all necessary tables/rules in the agent prompt
+5. **Let the system choose models** - Trust the agent system to select appropriate capability levels
+6. **Validate outputs** - Ensure agents followed instructions correctly
+7. **Fall back gracefully** - If agent struggles, try with more capable model hint
+
+### Anti-Patterns (Don't Do This)
+
+❌ **Using single capable model for everything** - Wastes money on mechanical tasks
+❌ **Asking user about model/cost choices** - Implementation detail they shouldn't think about
+❌ **Spawning agents for simple operations** - Direct tool use is faster for basic file reads
+❌ **Not passing lookup tables** - Fast agents need explicit rules to follow
+❌ **Hardcoding specific model names** - Prefer letting agent system decide based on task
+
+### Examples of Good Agent Spawning
+
+**Good**: Spawn agent for unit conversions with conversion table (system picks fast model)
+```markdown
+Task(
+  description: "Convert recipe measurements",
+  prompt: "[conversion table + ingredients]"
+)
+```
+
+**Good**: Spawn agent for store section assignment with mapping table (system picks fast model)
+```markdown
+Task(
+  description: "Assign store sections",
+  prompt: "[section mapping + ingredients]"
+)
+```
+
+**Good**: Hint at capability level if needed
+```markdown
+Task(
+  description: "Research authentic recipe sources",
+  prompt: "[research criteria]",
+  model: "sonnet"  # Hint: needs capable model for cultural sensitivity
+)
+```
+
+**Bad**: Using single capable model for mechanical lookups
+```markdown
+# Don't do this - waste of money
+[Just use current model to do unit conversion] # Should spawn agent instead
+```
+
+**Bad**: Spawning agent for simple file read
+```markdown
+# Don't do this - unnecessary overhead
+Task(description: "Read recipe file", ...) # Just use Read tool directly
+```
+
+**Bad**: Hardcoding specific model versions
+```markdown
+# Don't do this - too rigid
+Task(description: "...", model: "claude-sonnet-4-5-20250929")
+# Use capability hints instead: model: "sonnet" or let system decide
+```
 
 ## Working with This Project
 

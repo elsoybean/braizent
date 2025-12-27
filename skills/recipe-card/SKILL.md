@@ -260,14 +260,67 @@ Include these sections from the recipe:
 ```
 
 ## Step 5: Parse Recipe Data
-Extract and format the following from the markdown:
-- **Title**: Extract from the `# [Title]` heading
-- **Metadata**: Parse the bold key-value pairs (Source, Cuisine, Category, Servings, etc.)
-- **Description**: Extract from the Description section
-- **Ingredients**: Parse the table into HTML table format
-- **Instructions**: Extract numbered steps and format as ordered list
-- **Notes**: Extract both "Notes from Source" and "Personal Notes" sections if present
-- **Tags**: Optional, can be shown in footer
+
+Follow these exact parsing rules:
+
+### 5.1 Extract Title
+- Find first line starting with `#` (markdown heading level 1)
+- Remove the `#` and any leading/trailing whitespace
+- This is the recipe title
+
+### 5.2 Extract Metadata
+Look for lines starting with `**` followed by a colon:
+- `**Source:**` → Extract everything after colon
+- `**URL:**` → Extract URL after colon
+- `**Cuisine:**` → Extract cuisine type
+- `**Category:**` → Extract category OR `**Type:**` for quick staples
+- `**Servings:**` → Extract serving count
+- `**Total Time:**` → Extract time
+- `**Active Time:**` → Extract if present (optional)
+
+### 5.3 Extract Description
+- Find section header `## Description`
+- Extract all text until next `##` header
+- This is the description text
+
+### 5.4 Parse Ingredient Table
+Look for markdown table under `## Ingredients` section:
+```
+| Quantity | Unit | Ingredient | Preparation |
+|----------|------|------------|-------------|
+| 240      | ml   | milk       | room temperature |
+```
+
+For each table row (skip header and separator):
+1. Split by `|` character
+2. Extract columns: quantity, unit, ingredient, preparation
+3. Trim whitespace from each field
+4. If quantity is `-`, display as empty (for "to taste" items)
+
+### 5.5 Extract Instructions
+- Find section header `## Instructions`
+- Extract numbered list items (lines starting with digits followed by `.`)
+- Each line is one instruction step
+- Preserve any markdown formatting (`**bold**`, `*italic*`)
+
+### 5.6 Extract Notes
+Look for two optional sections:
+- `## Notes from Source` → Extract bullet points
+- `## Personal Notes` → Extract bullet points
+
+If section not found or contains only placeholder text like `*(Space for user to add their own notes)*`, skip it.
+
+### 5.7 Extract Tags (Optional)
+- Find section header `## Tags`
+- Extract space-separated tags (e.g., `[italian] [pasta] [weeknight]`)
+- Remove square brackets: `[italian]` → `italian`
+
+### Parsing Algorithm Summary
+1. Read entire markdown file
+2. Split into sections by `##` headers
+3. For each section, apply specific parsing rules above
+4. Build data structure with extracted values
+5. Use data structure to populate HTML template
 
 ## Step 6: Create the HTML File
 Use the Write tool to create a file at `./recipes/[recipe-folder]/[recipe-name].html`
