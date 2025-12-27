@@ -91,12 +91,16 @@ These tasks require judgment, creativity, or nuanced understanding:
 
 ### How to Spawn Task-Optimized Agents
 
-Within skill execution, use the Task tool and let the agent system select the appropriate model tier:
+Within skill execution, use the Task tool to route tasks to appropriate models based on complexity:
+
+#### For Mechanical Tasks (Use Background Execution)
+
+Mechanical tasks that follow explicit rules should run in the background to route to the fastest/cheapest available models:
 
 ```markdown
-## Step 3: Convert Measurements (Spawn Task-Optimized Agent)
+## Step 3: Convert Measurements (Spawn Background Agent)
 
-**Use the Task tool to spawn an agent for this mechanical task:**
+**Use the Task tool with background execution for this mechanical task:**
 
 Task(
   description: "Convert imperial measurements to metric",
@@ -109,11 +113,60 @@ Task(
   - 2 tablespoons butter
   - 350°F oven
 
-  Return converted measurements following the rounding rules."
+  Return converted measurements following the rounding rules.",
+  run_in_background: true  # Routes to fastest/cheapest model (e.g., local Ollama)
 )
 ```
 
-**Note**: The agent system will automatically use a fast/cheap model for this mechanical task. If a specific capability level is required, you can hint with `model: "haiku"` (fast) or `model: "sonnet"` (capable), but prefer letting the system decide.
+**When to use background execution:**
+- Unit conversions and lookups
+- Store section mapping
+- Recipe formatting and HTML generation
+- Ingredient filtering and categorization
+- Tag generation with decision trees
+- Package size lookups
+- Any task with explicit algorithms/tables
+
+#### For Reasoning Tasks (Use Default Routing)
+
+Tasks requiring judgment use normal Task tool calls (system selects appropriate model):
+
+```markdown
+Task(
+  description: "Suggest meals based on preferences",
+  prompt: "[context and requirements]"
+  # No run_in_background = uses default routing (capable model)
+)
+```
+
+#### For Premium Tasks (User Choice with Quality Tiers)
+
+For tasks requiring highest quality (cultural sensitivity, nuanced analysis), offer users a choice:
+
+```markdown
+**Prompt user:**
+"Which research quality would you like?
+- **Standard**: Good quality research (uses your configured default models)
+- **Premium**: Highest quality with maximum cultural sensitivity (uses your configured premium models)
+
+The cost difference depends on your routing configuration."
+
+**If user chooses Premium:**
+Task(
+  description: "Research recipe with cultural sensitivity",
+  prompt: "[research requirements]",
+  model: "opus"  # Capability hint for premium routing
+)
+
+**If user chooses Standard:**
+Task(
+  description: "Research recipe variations",
+  prompt: "[research requirements]"
+  # No model hint = default routing
+)
+```
+
+**Note**: With claude-code-router, these hints map to your configured routes. Background tasks use the cheapest option (local models), premium tasks use highest quality (configured premium models).
 
 ### Cost Savings Examples
 

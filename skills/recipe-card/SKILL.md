@@ -81,6 +81,44 @@ If they choose option 3:
 If the recipe already has specific measurements and detailed instructions (standard imported recipe format), proceed directly to Step 4.
 
 ## Step 4: Generate the Recipe Card HTML
+
+**COST OPTIMIZATION:** Recipe card generation is template-filling and parsing - perfect for background execution!
+
+**Spawn background agent:**
+
+```
+Task(
+  description: "Generate recipe card HTML",
+  prompt: "Generate a recipe card HTML file using this template and recipe data:
+
+  RECIPE DATA:
+  [Include complete recipe markdown content from Step 3/3A]
+
+  PARSING RULES:
+  - Extract title from first # heading
+  - Extract metadata from **Field:** lines
+  - Parse ingredient table (| Quantity | Unit | Ingredient | Preparation |)
+  - Extract numbered instruction steps
+  - Include notes sections if present
+  - Format tags without square brackets
+
+  HTML TEMPLATE REQUIREMENTS:
+  [Paste complete HTML template structure from section 4.4 below]
+
+  LAYOUT REQUIREMENTS:
+  - Single-page layout for printing
+  - 0.2-inch margins for compact fit
+  - Two-column grid for ingredients
+  - 10pt base font size
+  - Clean recipe card appearance
+
+  Return: Complete HTML file content ready to write",
+  run_in_background: true  # Routes to fastest/cheapest model
+)
+```
+
+This template-filling task routes to the fastest available model for maximum cost savings.
+
 Create a beautifully formatted HTML file that presents the recipe in a printable format. The HTML should:
 
 ### 4.1 Layout Design

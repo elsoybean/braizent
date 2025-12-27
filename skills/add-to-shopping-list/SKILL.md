@@ -58,10 +58,34 @@ Example: 'Wednesday January 8, Chicken and Dumplings, need to add the ingredient
 
 ## Step 3: Filter Out Pantry Staples
 
-**COST OPTIMIZATION:** This is a mechanical filtering task - perfect for fast agents! Consider spawning a task-optimized agent with the Task tool to:
+**COST OPTIMIZATION:** This is a mechanical filtering task - perfect for background execution! Spawn a background agent with the Task tool to:
 - Parse the ingredient list
 - Compare each ingredient against the profile's pantry staples list
 - Categorize into must_purchase / usually_have / always_have lists
+
+**Spawn background agent:**
+
+```
+Task(
+  description: "Filter pantry staples from ingredients",
+  prompt: "Filter this ingredient list against pantry staples:
+
+  INGREDIENT LIST:
+  [Include ingredient list from Step 2]
+
+  PANTRY STAPLES FROM PROFILE:
+  Always on hand: [list from profile]
+  Usually on hand: [list from profile]
+
+  Categorize each ingredient as:
+  1. must_purchase - definitely need to buy
+  2. usually_have - probably on hand, confirm with user
+  3. always_have - pantry staples, skip
+
+  Return three categorized lists.",
+  run_in_background: true  # Routes to fastest/cheapest model
+)
+```
 
 Compare the ingredient list against the user's pantry staples from their profile.
 
@@ -138,11 +162,41 @@ Rice (jasmine, 500g bag):
 
 ## Step 6: Smart Ingredient Allocation
 
-**COST OPTIMIZATION:** This algorithm-based task is perfect for fast agents! Consider spawning a task-optimized agent with the Task tool to:
+**COST OPTIMIZATION:** This algorithm-based task is perfect for background execution! Spawn a background agent with the Task tool to:
 - Execute the allocation algorithm below
 - Check existing purchases and unclaimed quantities
 - Determine package sizes using the lookup tables
 - Update tracking notes
+
+**Spawn background agent:**
+
+```
+Task(
+  description: "Allocate ingredients to shopping list",
+  prompt: "Smart ingredient allocation using this algorithm:
+
+  INGREDIENTS NEEDED:
+  [Include must_purchase list from Step 3]
+
+  EXISTING SHOPPING LIST:
+  [Include current shopping list contents from Step 5]
+
+  STANDARD PACKAGE SIZES:
+  [Paste complete package size lookup table from section below]
+
+  For each ingredient:
+  1. Check if already being purchased
+  2. If found: check unclaimed quantity, claim or add more
+  3. If not found: determine appropriate package size, add with tracking note
+  4. Track all claims with meal name and quantities
+
+  Return:
+  - Items to add (with package sizes and tracking notes)
+  - Items to update (with new claims)
+  - Summary of allocations made",
+  run_in_background: true  # Routes to fastest/cheapest model
+)
+```
 
 For each ingredient in the `must_purchase` list, determine if it should be added or claimed from existing purchases.
 
@@ -228,13 +282,40 @@ For each ingredient needed (e.g., "200g jasmine rice"):
 
 ## Step 7: Determine Store Sections
 
-**COST OPTIMIZATION:** This is pure keyword matching and lookup - ideal for fast agents! Consider spawning a task-optimized agent with the Task tool to:
+**COST OPTIMIZATION:** This is pure keyword matching and lookup - ideal for background execution! Spawn a background agent with the Task tool to:
 - Match ingredients against the section mapping below
 - Apply the keyword matching algorithm
 - Check for profile overrides
 - Return section assignments
 
-This straightforward categorization costs ~70% less with a fast model.
+**Spawn background agent:**
+
+```
+Task(
+  description: "Assign store sections to ingredients",
+  prompt: "Assign store sections using keyword matching:
+
+  INGREDIENTS TO CATEGORIZE:
+  [Include list of items to add from Step 6]
+
+  STORE SECTION MAPPING:
+  [Paste complete section mapping from below]
+
+  PROFILE OVERRIDES:
+  [Include any store-specific preferences from profile]
+
+  For each ingredient:
+  1. Match ingredient name against categories (keyword matching)
+  2. If multiple matches, choose most specific
+  3. If no match, use 'Other'
+  4. If profile specifies location/store, honor that first
+
+  Return: List of ingredients with assigned sections",
+  run_in_background: true  # Routes to fastest/cheapest model
+)
+```
+
+This straightforward categorization routes to the fastest available model.
 
 For each ingredient being added, determine which store section it belongs to **using this exact mapping:**
 

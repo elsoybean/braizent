@@ -20,9 +20,21 @@ This is a marquee feature - we go all out to make you feel like a professional c
 
 ---
 
-## Step 1: Get the Recipe Name
+## Step 1: Get Recipe Name and Choose Quality Tier
 
-Ask the user for the name of the recipe they want to research.
+### 1.1 Check Execution Context
+
+**Check if this skill was invoked from Plan Mode:**
+
+If the user used `/plan` before invoking this skill, they've already selected premium execution mode. In this case:
+- Skip the quality tier question (Step 1.2)
+- Note that premium routing is active
+- Proceed directly to Step 1.3 (get recipe name)
+
+**If invoked directly** (via `/research-recipe` or Skill tool):
+- Proceed to Step 1.2 (offer quality tier choice)
+
+### 1.2 Offer Quality Tier Choice (if not already in Plan Mode)
 
 **Prompt:**
 "What recipe would you like to research and develop? This could be:
@@ -31,7 +43,34 @@ Ask the user for the name of the recipe they want to research.
 - A classic dish you want to learn to make properly
 - A culturally significant dish you want to understand better
 
-Just tell me the name of the dish, and I'll research multiple versions for you."
+**Research Quality:**
+
+🆓 **Standard** - Good quality research and analysis
+- Multiple source perspectives
+- Suitable for most recipes
+- Uses your configured default models
+
+💎 **Premium** - Highest quality cultural sensitivity and nuanced analysis
+- Superior source evaluation and authenticity assessment
+- Recommended for: Culturally significant dishes, authentic ethnic cuisine
+- Uses your configured premium models
+- Cost depends on your routing configuration
+
+Which quality tier would you like?"
+
+Wait for user's response.
+
+**If user chooses Premium:**
+- Set `use_premium_routing = true`
+- Proceed to Step 1.3
+
+**If user chooses Standard:**
+- Set `use_premium_routing = false`
+- Proceed to Step 1.3
+
+### 1.3 Get Recipe Name
+
+"What's the name of the dish you'd like to research?"
 
 Wait for user's response.
 
@@ -56,7 +95,64 @@ This context will help you tailor the research and final recipe to the user's sp
 
 ## Step 3: Conduct Multi-Perspective Recipe Research
 
-Now search for multiple versions of the recipe using the WebSearch tool. You need to find AT LEAST three distinct versions:
+Now execute the research using the appropriate routing based on user's quality tier choice.
+
+### 3.1 Determine Execution Strategy
+
+**If `use_premium_routing = true` (or in Plan Mode):**
+
+Use Task tool with model hint for premium routing:
+
+```
+Task(
+  description: "Research recipe with premium cultural sensitivity",
+  prompt: "Research [recipe name] from multiple perspectives with highest quality cultural sensitivity.
+
+  Profile context:
+  [Include relevant profile information from Step 2]
+
+  Find and analyze AT LEAST three distinct versions:
+
+  A. THE SIMPLE VERSION
+  Search: '[recipe name] simple recipe' or '[recipe name] easy recipe'
+  Look for: Minimal ingredients, straightforward techniques, accessible to home cooks
+
+  B. THE AUTHENTIC VERSION (CRITICAL PRIORITY)
+  Search: '[recipe name] authentic recipe' or '[recipe name] traditional [culture/region] recipe'
+  PRIORITIZE: Voices from the culture - first-generation immigrants, cultural food blogs
+  Look for: Traditional techniques, cultural significance, family recipes
+
+  C. THE REFINED/TECHNICAL VERSION
+  Search: '[recipe name] chef recipe' or '[recipe name] Michelin'
+  Look for: Professional chef recipes, advanced techniques, restaurant quality
+
+  For each version found, note:
+  - Source URL and author
+  - Key techniques and ingredients
+  - Cultural context (if applicable)
+  - Difficulty level
+  - What makes this version unique
+
+  Present comprehensive comparison of all versions found.",
+  model: "opus"  # Hint for premium routing
+)
+```
+
+**If `use_premium_routing = false`:**
+
+Use Task tool without model hint (default routing):
+
+```
+Task(
+  description: "Research recipe variations from multiple sources",
+  prompt: "[Same prompt as above - include all research requirements]"
+  # No model hint = uses default routing
+)
+```
+
+### 3.2 Research Requirements
+
+Regardless of routing, search for multiple versions of the recipe. You need to find AT LEAST three distinct versions:
 
 ### A. The Simple Version
 Search for: "[recipe name] simple recipe" or "[recipe name] easy recipe"

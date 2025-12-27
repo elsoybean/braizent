@@ -27,12 +27,40 @@ Look for structured data first (JSON-LD, schema.org Recipe metadata), then fall 
 
 ## Step 3: Process and Standardize the Data
 
-**COST OPTIMIZATION:** Steps 3.1, 3.2, and 3.3 are mechanical tasks perfect for fast agents. Consider spawning a task-optimized agent with the Task tool to handle:
+**COST OPTIMIZATION:** Steps 3.1, 3.2, and 3.3 are mechanical tasks perfect for background execution. Spawn a background agent with the Task tool to handle:
 - Title reformatting using the algorithm below
 - Unit conversions using the lookup tables below
 - Tag generation using the decision tree below
 
-These straightforward operations cost ~70% less with a fast model compared to using a single capable model for everything.
+**Spawn background agent:**
+
+```
+Task(
+  description: "Convert and format recipe data",
+  prompt: "Process the following recipe data using these exact rules:
+
+  RECIPE DATA TO PROCESS:
+  [Include fetched recipe data from Step 2]
+
+  STEP 1 - TITLE FORMATTING:
+  [Paste complete title formatting algorithm from section 3.1 below]
+
+  STEP 2 - MEASUREMENT CONVERSION:
+  [Paste complete conversion tables from section 3.2 below]
+
+  STEP 3 - TAG GENERATION:
+  [Paste complete tag decision tree from section 3.4 below]
+
+  Return:
+  - Formatted title
+  - Converted ingredient list (in 4-column table format)
+  - Generated tags (5-10 tags)
+  - Converted temperatures in instructions",
+  run_in_background: true  # Routes to fastest/cheapest model
+)
+```
+
+These straightforward operations route to the fastest available model (e.g., local Ollama) for maximum cost savings.
 
 ### 3.1 Title Formatting
 
