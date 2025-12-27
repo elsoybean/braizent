@@ -298,18 +298,29 @@ Based on your requirements ([time constraint], [people count], [special consider
 
 Now suggest side dishes that complement the main dish.
 
+**COST OPTIMIZATION:** For standard side pairings, you can use template rules for 30-40% cost savings. Consider spawning a fast agent to apply the pairing rules below mechanically.
+
+**Use template rules (fast/cheap) OR creative suggestions (capable model)**:
+- **Option 1: Template-based** - Apply mechanical pairing rules below (faster, 30-40% cheaper)
+- **Option 2: Creative** - Use flavor pairing reasoning and user preferences (more personalized)
+
+Default to template rules unless user specifically asks for creative ideas.
+
 **Considerations for sides:**
 
 1. **Does the main dish already include sides?**
    - Complete meals (pasta with sauce, stir-fry with rice, soup with bread) may not need additional sides
    - Protein-only mains (roast chicken, grilled steak, pan-fried fish) definitely need sides
 
-2. **What's the cuisine and flavor profile?**
-   - Italian main → roasted vegetables, simple salad, crusty bread
-   - Asian main → rice, stir-fried vegetables, simple cucumber salad
-   - German main → potatoes (roasted/boiled/mashed), cabbage, sauerkraut
-   - American comfort food → mashed potatoes, roasted vegetables, bread
-   - French main → roasted vegetables, potatoes au gratin, green salad
+2. **What's the cuisine and flavor profile?** Apply these pairing rules:
+   - **Italian**: IF pasta → bread + salad; IF protein → pasta + roasted veg (zucchini, bell peppers, tomatoes)
+   - **Asian**: ALWAYS rice + stir-fried greens (bok choy) OR cucumber salad; optional: miso/egg drop soup
+   - **German**: Potatoes (roasted/boiled/mashed/spaetzle) + red cabbage OR green beans; often: sauerkraut/pickles
+   - **French**: Roasted potatoes OR rice pilaf + haricots verts OR roasted root veg; often: green salad
+   - **American**: Mashed potatoes/rice/bread + roasted veg OR steamed green beans; often: gravy/pan sauce
+   - **Mexican**: IF tacos/enchiladas → Mexican rice + refried beans; IF protein → rice + beans + salad
+   - **Indian**: Basmati rice + naan + raita (yogurt sauce); for biryani → raita only
+   - **Mediterranean**: Rice pilaf/couscous/pita + Greek salad/tabbouleh/roasted veg; often: tzatziki/hummus
 
 3. **What's the cooking method and timing?**
    - If main uses oven, sides can roast alongside

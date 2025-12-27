@@ -116,66 +116,65 @@ Extract:
 ## Step 5: Suggest Standard Side Dishes
 
 **COST OPTIMIZATION:** This is template-based pairing - perfect for fast agents! Consider spawning a task-optimized agent to:
-- Apply the side dish pairing rules below
-- Match cuisine to standard sides
-- Return 1-2 simple side suggestions
+- Apply the side dish pairing rules below mechanically
+- Match cuisine to standard sides using the decision algorithm
+- Return 1-2 simple side suggestions using the quick templates
 
-Use these **standard side pairing rules** based on cuisine:
+**Use these standardized side pairing rules** based on main dish cuisine:
 
 ### Italian Mains
-- IF pasta dish: Serve with crusty bread and simple green salad (olive oil & vinegar dressing)
-- IF protein only (chicken parm, etc.): Serve with pasta (garlic butter or marinara) and roasted vegetables
-- Vegetable: Roasted zucchini, bell peppers, or tomatoes
+- **IF pasta dish**: Already complete → Serve with crusty bread + simple green salad (olive oil & vinegar)
+- **IF protein-focused** (chicken parm, etc.): Pasta (garlic butter/marinara) + roasted vegetables (zucchini, bell peppers, tomatoes)
 
-### Asian Mains (Chinese, Thai, Vietnamese, etc.)
-- ALWAYS serve with: Steamed jasmine rice or white rice
-- Vegetable: Stir-fried bok choy or cucumber salad
-- Optional: Miso soup or egg drop soup (if time allows)
+### Asian Mains (Chinese, Thai, Vietnamese, Japanese)
+- **ALWAYS serve with**: Steamed jasmine rice or white rice (jasmine for Chinese/Thai/Vietnamese, short-grain for Japanese)
+- **IF stir-fry**: Rice + stir-fried greens (bok choy, Chinese broccoli) OR cucumber salad
+- **IF curry**: Rice + simple vegetable (steamed or stir-fried)
+- **IF noodle/rice dish**: Already complete (optional: cucumber salad, pickled vegetables)
 
 ### German Mains
-- Starch: Roasted potatoes, boiled potatoes, or spaetzle
-- Vegetable: Red cabbage (braised or slaw) OR green beans
-- Often includes: Sauerkraut or pickles on the side
+- **Starch** (pick one): Roasted potatoes (35 min, 220°C), boiled potatoes (20 min), mashed potatoes (25 min), or spaetzle
+- **Vegetable** (pick one): Red cabbage (braised or slaw), green beans (steamed/sautéed), roasted carrots (25 min, 200°C)
+- **Traditional additions**: Sauerkraut (for pork), pickles/cornichons
 
 ### French Mains
-- Starch: Roasted fingerling potatoes OR rice pilaf
-- Vegetable: Haricots verts (French green beans) OR roasted root vegetables
-- Often includes: Green salad with vinaigrette
+- **Starch** (pick one): Roasted fingerling potatoes (30 min, 200°C), rice pilaf (25 min), crusty French bread
+- **Vegetable** (pick one): Haricots verts (French green beans, 5 min steam), roasted root vegetables, ratatouille (if summer), simple green salad (vinaigrette)
 
 ### American Comfort Food
-- Starch: Mashed potatoes, rice, or crusty bread
-- Vegetable: Roasted vegetables (broccoli, carrots, Brussels sprouts) OR steamed green beans
-- Often includes: Gravy or pan sauce
+- **Starch** (pick one): Mashed potatoes (25 min), rice (white/brown, 18-25 min), biscuits/dinner rolls, cornbread (if chili/BBQ)
+- **Vegetable** (pick one): Roasted vegetables (broccoli, carrots, Brussels sprouts), steamed green beans (5 min), corn on the cob, coleslaw (for BBQ/fried)
 
 ### Mexican Mains
-- IF tacos/enchiladas: Usually complete, suggest Mexican rice and refried beans on side
-- Vegetable: Often integrated into dish (skip additional unless very light)
-- Always offer: Cilantro lime rice, refried beans, simple salad
+- **IF tacos/enchiladas/burritos**: Usually complete → Mexican rice + refried beans on side
+- **IF fajitas**: Serve with warm tortillas + Mexican rice + refried beans + toppings (sour cream, guacamole, salsa, cheese)
+- **IF protein-focused**: Mexican rice + refried beans OR black beans + simple salad
 
-### Default (Any Cuisine)
-- Starch: Rice (white or brown) OR roasted potatoes
-- Vegetable: Roasted seasonal vegetables OR simple green salad
+### Default (Any Cuisine / Unknown)
+- **Starch**: Rice (white/brown, 18-25 min) OR roasted potatoes (35 min, 220°C) OR bread
+- **Vegetable**: Roasted seasonal vegetables (20-30 min) OR steamed green vegetables (5-10 min) OR simple green salad (5 min)
 
 ### Quick Side Templates
 
-**For roasted vegetables:**
-"Roasted [vegetable]: Toss with olive oil, salt, pepper; roast [time] at [temp]°C"
+**Roasted vegetables**: "Roasted [vegetable]: Toss with olive oil, salt, pepper; roast [time] at [temp]°C"
 - Broccoli: 20 min at 220°C
 - Carrots: 25 min at 200°C
 - Potatoes: 35 min at 220°C
 - Brussels sprouts: 25 min at 220°C
 
-**For steamed vegetables:**
-"Steam [vegetable] for [time] minutes until tender"
-- Broccoli: 5-7 min
-- Green beans: 5 min
-- Carrots: 8-10 min
+**Steamed vegetables**: "Steam [vegetable] for [time] minutes until tender"
+- Broccoli: 5-7 min | Green beans: 5 min | Carrots: 8-10 min
 
-**For rice:**
-"Cook [type] rice: 1 cup rice + 2 cups water, simmer 18 min"
+**Rice**: "Cook [type] rice: 1 cup rice + 2 cups water, simmer 18 min"
 
-**For simple salad:**
-"[Greens] with simple dressing: olive oil, vinegar, salt, pepper"
+**Simple salad**: "[Greens] with simple dressing: olive oil, vinegar, salt, pepper"
+
+### Equipment Coordination
+- **IF main uses oven**: Suggest oven-roasted sides (cook together)
+- **IF main uses stovetop**: Suggest quick stovetop sides OR oven sides
+- **IF main is slow-cooker**: Suggest quick sides (15-30 min near serving time)
+
+Apply these rules mechanically based on the main dish cuisine from Step 4.
 
 ---
 
