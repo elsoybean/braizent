@@ -1,0 +1,10 @@
+[Unit]
+Description=Two-way git sync for the CookCLI recipe repo (meal-planning)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=pi
+Environment=REPO_DIR=/home/pi/meal-planning
+ExecStart=/home/pi/braizent/tools/recipe-sync.sh
