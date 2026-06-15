@@ -24,10 +24,10 @@ These two sections are the source for the cooking layer's config, so capture the
 
 After writing or updating either section, **regenerate the configs from the profile**:
 
-- `cook/config/aisle.conf` — one `[section]` per store channel, its items one per line with `|` aliases, in the profile's stated order.
-- `cook/config/pantry.conf` — the staples as entries under sensible location groups, omitting the fast-movers above.
+- `cook/aisle.conf` — one `[section]` per store channel, its items one per line with `|` aliases, in the profile's stated order.
+- `cook/pantry.conf` — the staples as entries under sensible location groups, omitting the fast-movers above.
 
-`PROFILE.md` is the source of truth and these configs are generated from it, so edits go to the profile and then regenerate — not the other way around.
+These live at the `cook/` root (where the CookCLI web server discovers them). `PROFILE.md` is the source of truth and the configs are generated from it, so edits go to the profile and then regenerate — not the other way around.
 
 ## Write and confirm
 

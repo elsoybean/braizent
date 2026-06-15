@@ -7,7 +7,7 @@ A Claude Code plugin of meal-planning and recipe skills. The **skills** live her
 Your meal-planning data has two layers:
 
 - **Authoring layer** — `recipes/`, `meal-plans/`, `PROFILE.md`: human-readable markdown that you and these skills write and edit.
-- **Cooking layer** — `cook/`: Cooklang `.cook` files plus `cook/config/aisle.conf` and `cook/config/pantry.conf`, served by [CookCLI](https://cooklang.org) (typically `cook server` on a Raspberry Pi) for browsing, scaling, timers, and shopping. Generated from the markdown by `to-cooklang`, but independently editable — the two are deliberately not auto-synced.
+- **Cooking layer** — `cook/`: Cooklang `.cook` files plus `cook/aisle.conf` and `cook/pantry.conf`, served by [CookCLI](https://cooklang.org) (typically `cook server` on a Raspberry Pi) for browsing, scaling, timers, and shopping. Generated from the markdown by `to-cooklang`, but independently editable — the two are deliberately not auto-synced.
 
 Recipe markdown is the authoring source of truth; `.cook` is authoritative for cooking.
 
@@ -32,7 +32,7 @@ Auto-discovered from `skills/` (see `.claude-plugin/plugin.json`).
 - **meal-planner** — build a profile- and leftover-aware plan and feed the week's recipes into the shopping flow.
 - **suggest-meal** — suggest a complete meal (main + sides) for a date, collection first then web.
 - **recipe-card** — printable one-page card (HTML + PDF), primarily from `.cook`.
-- **build-profile** — create or update `PROFILE.md`, and regenerate `cook/config/aisle.conf` and `pantry.conf` from it.
+- **build-profile** — create or update `PROFILE.md`, and regenerate `cook/aisle.conf` and `pantry.conf` from it.
 - **add-to-shopping-list** — put recipes on the CookCLI shopping list so the Bring feed has something to push.
 
 ## Shopping
@@ -61,9 +61,8 @@ my-meals/
 ├── meal-plans/[range].md
 └── cook/                            # cooking layer (CookCLI)
     ├── [slug].cook
-    └── config/
-        ├── aisle.conf               # store-channel routing (generated from PROFILE.md)
-        └── pantry.conf              # always-on-hand staples (generated from PROFILE.md)
+    ├── aisle.conf                   # store-channel routing (generated from PROFILE.md)
+    └── pantry.conf                  # always-on-hand staples (generated from PROFILE.md)
 ```
 
 ## Adding a skill

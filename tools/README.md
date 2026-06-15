@@ -63,7 +63,7 @@ When paused, `/home/pi/recipe-sync.conflict` explains what to do. Resolve in `/h
 
 ---
 
-## bring-sync — CookCLI → Bring feeder
+## bring-sync — CookCLI -> Bring feeder
 
 Pushes CookCLI's recipe-derived shopping list into a single shared Bring! list. The store channel (the `aisle.conf` section — Knuspr / Rewe / Asian market / Hand-pick) is written into Bring's item **specification** after the quantity, so one list carries everything:
 
@@ -84,7 +84,7 @@ pip install bring-api aiohttp
 
 ### Config
 
-Copy `.env.example` to `.env` (gitignored) and fill in `BRING_EMAIL`, `BRING_PASSWORD`, `BRING_LIST`, and paths. If you signed up for Bring with Google/Apple/Facebook, set a password first (Bring app: Profile → More settings → Change password); you can still sign in with Google afterward.
+Copy `.env.example` to `.env` (gitignored) and fill in `BRING_EMAIL`, `BRING_PASSWORD`, `BRING_LIST`, and paths. If you signed up for Bring with Google/Apple/Facebook, set a password first (Bring app: Profile -> More settings -> Change password); you can still sign in with Google afterward.
 
 ### Usage
 
@@ -99,5 +99,5 @@ python3 bring-sync.py sarmale.cook flan.cook   # explicit recipes
 ### Notes
 
 - **JSON shape:** the parser targets CookCLI's documented `-f json` output, but the exact schema can vary by version. If `--dry-run` is empty or odd, run `cook shopping-list -f json <recipe>` once and adjust `parse_items()` — it's isolated for that.
-- **Config location:** CookCLI auto-discovers `aisle.conf`/`pantry.conf` from a `config/` dir inside the recipe folder (`cook/config/`). If your configs are still at `cook/aisle.conf`/`cook/pantry.conf`, either move them to `cook/config/` (recommended — the server picks them up too) or point `AISLE_CONF`/`PANTRY_CONF` at the current paths.
+- **Config location:** the CookCLI web server discovers `aisle.conf`/`pantry.conf` at the **root of the served recipe folder** (`cook/aisle.conf`, `cook/pantry.conf`), so that's where they live and what `bring-sync` defaults to. (The `cook shopping-list`/`cook pantry` CLI commands also look in a `config/` subdir, but the server doesn't pick them up there — root is the working location.) Override `AISLE_CONF`/`PANTRY_CONF` only if your layout differs.
 - **Scheduling:** run on demand, or wrap in a systemd timer like `recipe-sync` if you want it periodic.
