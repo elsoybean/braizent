@@ -1,143 +1,70 @@
 ---
 name: import-recipe
-description: Imports a recipe from a URL to store it in a regular markdown file locally
+description: Import a recipe from a URL into a markdown file in the collection, then generate its Cooklang version.
 ---
 
-# Recipe Import Workflow
+# Import Recipe
 
-## Step 1: Get the URL
-The user must provide a recipe URL. If no URL is provided, ask for it before proceeding.
+Fetch a recipe from a URL, save it as a standard recipe in `recipes/`, then generate its `.cook` counterpart so it's immediately cookable.
 
-## Step 2: Fetch the Web Page
-Use the WebFetch tool to retrieve the recipe page content. In your prompt, instruct it to extract:
-- Recipe title
-- Short description
-- Source name
-- Cuisine type
-- Recipe category (e.g., soup, stew, main course, side dish, dessert, appetizer, salad, etc.)
-- Servings count
-- Total time
-- Active/prep time (if available)
-- Full ingredients list with quantities and units
-- Step-by-step instructions
-- Cooking temperatures (note if in Fahrenheit)
-- Any special notes, tips, or variations mentioned
+## Input
 
-Look for structured data first (JSON-LD, schema.org Recipe metadata), then fall back to parsing the HTML content if structured data is not available.
+A recipe URL. If none was given, ask for it.
 
-## Step 3: Process and Standardize the Data
+## Fetch
 
-### 3.1 Title Formatting
-Transform the title so the main food item comes first, with descriptors after a comma:
-- "Classic Lasagna" → "Lasagna, Classic"
-- "Creamy Leek and Potato Soup" → "Leek and Potato Soup, Creamy"
-- "Easy Weeknight Chicken Stir Fry" → "Chicken Stir Fry, Easy Weeknight"
-- "The Best Chocolate Cake" → "Chocolate Cake, The Best"
+WebFetch the page and extract the recipe: title, description, source, cuisine, category, servings, total/active time, ingredients (quantity, unit, prep), instructions, temperatures, and any notable tips. Prefer structured data (JSON-LD / schema.org Recipe) and fall back to the page HTML.
 
-If the title is already in the correct format or is a simple name without adjectives (e.g., "Lasagna", "Minestrone"), leave it as is.
+## Conventions to apply
 
-### 3.2 Measurements Conversion
-- Convert all ingredient measurements to metric units:
-  - Cups → ml (1 cup = 240ml)
-  - Tablespoons (tbsp) → ml (1 tbsp = 15ml)
-  - Teaspoons (tsp) → ml (1 tsp = 5ml)
-  - Ounces (oz) → grams (1 oz = 28g)
-  - Pounds (lb) → grams or kg (1 lb = 454g)
-  - Fahrenheit → Celsius ((°F - 32) × 5/9 = °C)
-- Keep common units like "cloves", "pieces", "whole", etc. as-is
-- Round to sensible values (e.g., 237ml → 240ml)
+- **Title** — lead with the dish, modifiers after a comma: "Classic Lasagna" → "Lasagna, Classic"; "Creamy Leek and Potato Soup" → "Leek and Potato Soup, Creamy". A bare name ("Minestrone") stays as-is. This ordering is the house convention across the whole collection.
+- **Slug and paths** — title lowercased, spaces to hyphens, alphanumerics only: "Lasagna, Classic" → `lasagna-classic`, saved at `recipes/[slug]/[slug].md`.
+- **Metric** — weight in g/kg, volume in ml, temperatures in °C. Chris cooks by weight, so prefer grams for anything you would weigh; keep count units (cloves, whole) as-is.
+- **Tags** — 5–10 lowercase, hyphenated tags across main ingredients, cuisine, category, method, and (only if clearly true) dietary/time attributes.
 
-### 3.3 Ingredient Table Structure
-Parse each ingredient into four columns:
-1. **Quantity**: The numeric amount (e.g., "2", "1/2", "240")
-2. **Unit**: The measurement unit (e.g., "ml", "g", "cloves", "whole")
-3. **Ingredient**: The main ingredient name (e.g., "onion", "flour", "olive oil")
-4. **Preparation**: How to prepare it (e.g., "diced", "peeled and quartered", "sifted", "room temperature")
+## Output
 
-If an ingredient has no quantity (e.g., "Salt to taste"), use "-" for quantity and unit.
-If no preparation is specified, leave that column empty.
-
-### 3.4 Generate Tags
-Create 5-10 relevant tags based on:
-- Main ingredients (e.g., "chicken", "pasta", "tomato")
-- Cuisine type (e.g., "italian", "thai", "mexican")
-- Category (e.g., "soup", "dessert", "main-course")
-- Cooking method (e.g., "baked", "grilled", "slow-cooker")
-- Dietary attributes (e.g., "vegetarian", "gluten-free") if clearly applicable
-- Time commitment (e.g., "quick", "weeknight", "make-ahead")
-
-Format tags in lowercase with hyphens for multi-word tags.
-
-## Step 4: Generate the Filename
-1. Take the formatted recipe title
-2. Convert to lowercase
-3. Replace spaces with hyphens
-4. Remove special characters (keep only letters, numbers, hyphens)
-5. Examples:
-   - "Lasagna, Classic" → "lasagna-classic.md"
-   - "Leek and Potato Soup, Creamy" → "leek-and-potato-soup-creamy.md"
-   - "Pad Thai" → "pad-thai.md"
-
-## Step 5: Create the Recipe Folder and Markdown File
-
-### 5.1 Create the Recipe Folder
-Create a folder at `./recipes/[filename]/` using the Bash tool:
-```bash
-mkdir -p recipes/[filename]
-```
-
-### 5.2 Create the Markdown File
-Use the Write tool to create a file at `./recipes/[filename]/[filename].md` with this exact structure:
+Write `recipes/[slug]/[slug].md` in the collection's standard shape:
 
 ```markdown
-# [Recipe Title]
+# [Title]
 
-**Source:** [Source Name]
-**URL:** [Source URL]
-**Cuisine:** [Cuisine Type]
-**Category:** [Category]
-**Servings:** [Number]
-**Total Time:** [Time]
-**Active Time:** [Time] *(if available)*
+**Source:** [name]
+**URL:** [url]
+**Cuisine:** [cuisine]
+**Category:** [category]
+**Servings:** [n]
+**Total Time:** [time]
+**Active Time:** [time, if known]
 
 ## Description
-
-[Short description of the recipe]
+[short description]
 
 ## Ingredients
 
 | Quantity | Unit | Ingredient | Preparation |
 |----------|------|------------|-------------|
-| [qty]    | [unit] | [ingredient] | [prep] |
-| [qty]    | [unit] | [ingredient] | [prep] |
+| ... | ... | ... | ... |
 
 ## Instructions
-
-1. [First step]
-2. [Second step]
-3. [Continue numbered steps...]
+1. ...
 
 ## Notes from Source
-
-- [Important note or tip from the original recipe]
-- [Another note if applicable]
-- *(Leave this section empty if no notes from source)*
+- [tips from the original, or leave empty]
 
 ## Personal Notes
-
-- *(Space for user to add their own notes)*
+-
 
 ## Tags
-
-[tag1] [tag2] [tag3] [tag4] [tag5]
+[tag] [tag] [tag]
 ```
 
-## Step 6: Confirm Completion
-After successfully creating the file, inform the user:
-- The recipe title
-- The folder and filename where it was saved
-- A brief confirmation message
+The four-column ingredient table is a contract that `to-cooklang` and `recipe-card` depend on — keep that structure. Use "-" for the quantity/unit of to-taste items; leave Preparation blank when unspecified.
 
-Example: "Successfully imported 'Lasagna, Classic' and saved to [recipes/lasagna-classic/lasagna-classic.md](recipes/lasagna-classic/lasagna-classic.md)"
+## Then generate the .cook
 
-The recipe now lives in its own folder where future assets (HTML card, PDF, images) can be stored alongside the markdown file.
+Run the `to-cooklang` skill for the new recipe so `cook/[slug].cook` is created and it appears in CookCLI. It transcribes the table faithfully and won't overwrite an existing `.cook`.
+
+## Finish
+
+Confirm the title, link the saved markdown, and note the `.cook` was generated.
