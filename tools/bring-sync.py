@@ -8,8 +8,8 @@ resulting item to ONE Bring! list. The store channel (the aisle.conf section, e.
 Knuspr / Rewe / Hand-pick) is written into Bring's item specification after the
 quantity, so a single shared list carries everything:
 
-    Pointed cabbage        400 g \u00b7 Knuspr
-    Chicken leg quarters   2 \u00b7 Rewe
+    Pointed cabbage        400 g · Knuspr
+    Chicken leg quarters   2 · Rewe
 
 Ad-hoc and voice-added items live natively in Bring and are never touched.
 
@@ -39,8 +39,8 @@ def load_env(path):
 load_env(Path(__file__).with_name(".env"))
 
 COOK_DIR = Path(os.environ.get("COOK_DIR", "/home/pi/meal-planning/cook"))
-AISLE_CONF = Path(os.environ.get("AISLE_CONF", str(COOK_DIR / "config" / "aisle.conf")))
-PANTRY_CONF = Path(os.environ.get("PANTRY_CONF", str(COOK_DIR / "config" / "pantry.conf")))
+AISLE_CONF = Path(os.environ.get("AISLE_CONF", str(COOK_DIR / "aisle.conf")))
+PANTRY_CONF = Path(os.environ.get("PANTRY_CONF", str(COOK_DIR / "pantry.conf")))
 BRING_EMAIL = os.environ.get("BRING_EMAIL")
 BRING_PASSWORD = os.environ.get("BRING_PASSWORD")
 BRING_LIST = os.environ.get("BRING_LIST")
@@ -132,7 +132,7 @@ def parse_items(data):
 
 
 def spec_for(qty, channel):
-    return " \u00b7 ".join(b for b in (qty, channel) if b)
+    return " · ".join(b for b in (qty, channel) if b)
 
 
 async def push_to_bring(items, dry_run):
