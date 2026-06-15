@@ -14,7 +14,7 @@ Operational tooling for the kitchen recipe system, run on the Raspberry Pi that 
 Bring credentials and the GitHub deploy key are secrets; they live on the Pi only:
 
 - GitHub push auth: an SSH deploy key in `~/.ssh/`
-- Bring login: a gitignored `tools/.env` (used by `bring-sync.py`)
+- Bring login: a gitignored `tools/.env` (copy from `.env.example`)
 
 `.env` and `*.conflict` are gitignored here.
 
@@ -63,6 +63,41 @@ When paused, `/home/pi/recipe-sync.conflict` explains what to do. Resolve in `/h
 
 ---
 
-## bring-sync — CookCLI → Bring feeder (next)
+## bring-sync — CookCLI → Bring feeder
 
-Pushes CookCLI's generated shopping list (recipes scaled, `pantry.conf` subtracted, `aisle.conf` routed) into the shared Bring! list via the `bring-api` package. Ad-hoc and voice items stay native in Bring. Needs `tools/.env` with Bring `email`/`password` — if you signed up with Google/Apple/Facebook, set a password first (Bring app: Profile → More settings → Change password).
+Pushes CookCLI's recipe-derived shopping list into a single shared Bring! list. The store channel (the `aisle.conf` section — Knuspr / Rewe / Asian market / Hand-pick) is written into Bring's item **specification** after the quantity, so one list carries everything:
+
+```
+Pointed cabbage        400 g · Knuspr
+Chicken leg quarters   2 · Rewe
+```
+
+Ad-hoc and voice-added items stay native in Bring and are never touched.
+
+### Requirements
+
+```
+pip install bring-api aiohttp
+```
+
+`cook` must be on PATH.
+
+### Config
+
+Copy `.env.example` to `.env` (gitignored) and fill in `BRING_EMAIL`, `BRING_PASSWORD`, `BRING_LIST`, and paths. If you signed up for Bring with Google/Apple/Facebook, set a password first (Bring app: Profile → More settings → Change password); you can still sign in with Google afterward.
+
+### Usage
+
+```
+python3 bring-sync.py --dry-run            # preview using cook/.shopping-list
+python3 bring-sync.py                       # push to Bring
+python3 bring-sync.py sarmale.cook flan.cook   # explicit recipes
+```
+
+**Always run `--dry-run` first** after any change — it prints exactly what would be added and never contacts Bring.
+
+### Notes
+
+- **JSON shape:** the parser targets CookCLI's documented `-f json` output, but the exact schema can vary by version. If `--dry-run` is empty or odd, run `cook shopping-list -f json <recipe>` once and adjust `parse_items()` — it's isolated for that.
+- **Config location:** CookCLI auto-discovers `aisle.conf`/`pantry.conf` from a `config/` dir inside the recipe folder (`cook/config/`). If your configs are still at `cook/aisle.conf`/`cook/pantry.conf`, either move them to `cook/config/` (recommended — the server picks them up too) or point `AISLE_CONF`/`PANTRY_CONF` at the current paths.
+- **Scheduling:** run on demand, or wrap in a systemd timer like `recipe-sync` if you want it periodic.
