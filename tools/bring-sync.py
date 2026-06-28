@@ -39,8 +39,8 @@ def load_env(path):
 load_env(Path(__file__).with_name(".env"))
 
 COOK_DIR = Path(os.environ.get("COOK_DIR", "/home/pi/meal-planning/cook"))
-AISLE_CONF = Path(os.environ.get("AISLE_CONF", str(COOK_DIR / "aisle.conf")))
-PANTRY_CONF = Path(os.environ.get("PANTRY_CONF", str(COOK_DIR / "pantry.conf")))
+AISLE_CONF = Path(os.environ.get("AISLE_CONF", str(COOK_DIR / "config" / "aisle.conf")))
+PANTRY_CONF = Path(os.environ.get("PANTRY_CONF", str(COOK_DIR / "config" / "pantry.conf")))
 BRING_EMAIL = os.environ.get("BRING_EMAIL")
 BRING_PASSWORD = os.environ.get("BRING_PASSWORD")
 BRING_LIST = os.environ.get("BRING_LIST")

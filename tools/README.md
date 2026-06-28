@@ -99,5 +99,5 @@ python3 bring-sync.py sarmale.cook flan.cook   # explicit recipes
 ### Notes
 
 - **JSON shape:** the parser targets CookCLI's documented `-f json` output, but the exact schema can vary by version. If `--dry-run` is empty or odd, run `cook shopping-list -f json <recipe>` once and adjust `parse_items()` — it's isolated for that.
-- **Config location:** the CookCLI web server discovers `aisle.conf`/`pantry.conf` at the **root of the served recipe folder** (`cook/aisle.conf`, `cook/pantry.conf`), so that's where they live and what `bring-sync` defaults to. (The `cook shopping-list`/`cook pantry` CLI commands also look in a `config/` subdir, but the server doesn't pick them up there — root is the working location.) Override `AISLE_CONF`/`PANTRY_CONF` only if your layout differs.
+- **Config location:** `aisle.conf` and `pantry.conf` live in `cook/config/` — CookCLI's standard config directory, discovered from the served recipe folder. `bring-sync` defaults to those paths (`cook/config/aisle.conf`, `cook/config/pantry.conf`); override `AISLE_CONF`/`PANTRY_CONF` only if your layout differs.
 - **Scheduling:** run on demand, or wrap in a systemd timer like `recipe-sync` if you want it periodic.
