@@ -36,15 +36,14 @@ This synthesis is the part that makes the skill worth running — don't skip it 
 
 Don't jump to a finished recipe. Talk through the real decisions: which angle to anchor on, time and effort budget, authenticity vs. accessibility, equipment, substitutions for the profile. Propose a path, get reactions, iterate. Fold in the elevation steps that genuinely matter (bloom spices/miso in fat, toast, temper, rest, velvet) where they earn their place. Adapt fully to the profile — servings, equipment, metric by weight (grams).
 
-## 5. Save (connector)
+## 5. Save — hand to the save contract
 
-Commit to `elsoybean/meal-planning`:
+You've done the judgment; the writing is mechanical, so don't re-derive it. Assemble the results as structured recipe objects and run the **recipe-save contract** (`desktop-skills/_recipe-saver.md` in the braizent repo — read it once via the connector):
 
-- `recipes/[slug]/[slug].md` — the user's version, standard format (four-column ingredient table: Quantity | Unit | Ingredient | Preparation; numbered steps), with a **Development Notes** section (the key choices and why) and a **Research Sources** list with titles + URLs. **Always credit sources.**
-- `recipes/[slug]/[slug]_simple.md`, `_authentic.md`, `_refined.md` — the notable source versions as reference (metric, standard layout, a line on what each teaches and where it's from). Markdown-only.
-- `cook/[slug].cook` — the main recipe's Cooklang, written as text and faithfully (YAML frontmatter: title, servings, cuisine, course, time, source, tags; body `@ingredient{qty%unit}`, `#cookware{}`, `~{timer}`, `== Section ==`; `=` to lock to-taste amounts). The reference variants don't get `.cook` files.
+- the user's version as `kind: standard`, carrying `development_notes` and `research_sources`,
+- each notable source version as `kind: reference-variant` (the contract keeps these markdown-only).
 
-Slug follows the house lead-noun-first convention. Confirm before committing; then link everything and recap what makes the user's version theirs.
+The contract handles slugs, paths, the `.md`/`.cook` rendering, never-overwriting, and the commit. Then link everything and recap what makes the user's version theirs.
 
 ## The bar
 

@@ -27,11 +27,4 @@ Read `PROFILE.md` from the `elsoybean/meal-planning` repo (via the GitHub connec
 
 ## Landing it
 
-A riff can just end as understanding — don't force a recipe. But when it lands on a keeper, offer the off-ramp and hand to the right skill:
-
-- A finished dish with real measurements -> save it via **import-recipe**'s save shape (a full recipe in `recipes/[slug]/`, four-column table, plus its `.cook`).
-- A loose from-memory regular -> **quick-staple**.
-- A riff on a recipe already in the collection -> **recipe-variant**.
-- It crystallized into "let's go deep on dish X" -> **research-recipe**.
-
-Use the house naming convention (lead-noun-first, comma-inverted title -> hyphenated slug) and confirm before writing anything to the repo.
+A riff can just end as understanding — don't force a recipe. But when it lands on a keeper, offer the off-ramp and use the right authoring skill to capture it: a finished dish -> **import-recipe**'s save path; a loose regular -> **quick-staple**; a riff on a collection recipe -> **recipe-variant**; "let's go deep on dish X" -> **research-recipe**. They all write through the shared **recipe-save contract** (`desktop-skills/_recipe-saver.md`), so once you've structured the recipe the saving is mechanical. Use the house naming convention and confirm before writing anything to the repo.

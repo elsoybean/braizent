@@ -9,13 +9,8 @@ Bring a recipe from a URL into the user's `elsoybean/meal-planning` repo through
 
 ## Fetch and standardize
 
-Fetch the page, preferring structured data (JSON-LD / schema.org) and falling back to parsing the content. Convert to the house standard: metric, **grams by weight**; a four-column ingredient table (Quantity | Unit | Ingredient | Preparation); numbered steps with temperatures in °C; a short description; source name + URL; sensible tags. Title and slug follow the house convention — lead with the dish, modifiers after a comma ("Chicken Thighs, Crispy Soy-Glazed"), slug lowercased and hyphenated. Respect the profile's constraints (no anise/licorice).
+Fetch the page, preferring structured data (JSON-LD / schema.org) and falling back to parsing the content. Convert to the house standard: metric, **grams by weight**; numbered steps with temperatures in °C; a short description; source name + URL; sensible tags. Title is comma-inverted, lead-noun-first ("Chicken Thighs, Crispy Soy-Glazed"). Respect the profile's constraints (no anise/licorice). Structure the ingredients as discrete fields — quantity, unit, item, prep — since that's what the saver needs.
 
-## Write to the repo (connector)
+## Save — hand to the save contract
 
-Commit to `elsoybean/meal-planning`:
-
-- `recipes/[slug]/[slug].md` — the standardized recipe.
-- `cook/[slug].cook` — the Cooklang version, written as text (no `cook` binary needed): YAML frontmatter (`title`, `servings`, `cuisine`, `course`, `time`, `source`, `tags`); body with `@ingredient{qty%unit}`, `#cookware{}`, `~{timer}`, and `== Section ==` headers; `=` to lock to-taste amounts from scaling. Don't overwrite an existing `.cook`.
-
-Confirm before committing, then link the files.
+Assemble the standardized recipe as a structured object (`kind: standard`; `ingredients` as { quantity, unit, item, prep }; `steps`; `source` { name, url }; `tags`; `description`) and run the **recipe-save contract** (`desktop-skills/_recipe-saver.md` in the braizent repo, via the connector). It derives the slug, writes `recipes/<slug>/<slug>.md` and `cook/<slug>.cook` at the right paths, won't overwrite, and commits. Don't re-derive the slug, paths, or format here — just hand over clean structured data and confirm before it writes.

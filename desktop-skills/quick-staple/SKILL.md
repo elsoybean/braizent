@@ -11,10 +11,6 @@ Document a recipe the user makes from memory — flexible, mostly on-hand, easy 
 
 Read `PROFILE.md` (connector) so you can assume rather than interrogate: servings, standard seasoning blend, saved fats and pantry staples, store routing, dietary needs (no anise/licorice). Have the user describe the dish in a sentence or two; fill only the gaps the profile can't. Variations and "why it's a go-to" are worth asking; basic seasoning isn't. Keep it quick — they know how to cook this.
 
-## Save (connector)
+## Save — hand to the save contract
 
-Write `recipes/[slug]/[slug].md` (house lead-noun-first naming) in the quick-staple shape: a header with `**Type:** Quick Staple`, then Description, Core Components (with variation notes), Shopping Needs (usually-buy vs. always-have, drawing on the profile's pantry), high-level Preparation Notes (memory joggers, not step-by-step), Variation Ideas, and a `[quick-staple]` tag. Amounts stay loose — to-taste, not weighed.
-
-## No .cook
-
-Quick staples stay out of `cook/` (no measurable quantities). To make one cookable later, use `recipe-variant` to create a `_precise` version — that variant gets the `.cook`. Confirm, then link the file.
+Assemble the staple as a structured object with `kind: quick-staple` — loose core components, shopping needs, high-level prep notes, and variation ideas, with no weighed amounts. Run the **recipe-save contract** (`desktop-skills/_recipe-saver.md`, via the connector). It writes `recipes/<slug>/<slug>.md` in the quick-staple shape and — correctly — no `.cook`. To make one cookable later, `recipe-variant` with a `_precise` suffix produces the version that does get a `.cook`.
