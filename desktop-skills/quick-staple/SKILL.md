@@ -13,4 +13,4 @@ Read `PROFILE.md` (connector) so you can assume rather than interrogate: serving
 
 ## Save — hand to the save contract
 
-Assemble the staple as a structured object with `kind: quick-staple` — loose core components, shopping needs, high-level prep notes, and variation ideas, with no weighed amounts. Run the **recipe-save contract** (`desktop-skills/_recipe-saver.md`, via the connector). It writes `recipes/<slug>/<slug>.md` in the quick-staple shape and — correctly — no `.cook`. To make one cookable later, `recipe-variant` with a `_precise` suffix produces the version that does get a `.cook`.
+Assemble the staple as a structured object with `kind: quick-staple` — loose core components, shopping needs, high-level prep notes, and variation ideas, with no weighed amounts. Follow the **recipe-save contract** (`_recipe-saver.md`, bundled in this skill folder). It writes `recipes/<slug>/<slug>.md` in the quick-staple shape and — correctly — no `.cook`. To make one cookable later, `recipe-variant` with a `_precise` suffix produces the version that does get a `.cook`.

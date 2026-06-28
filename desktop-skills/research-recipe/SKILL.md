@@ -38,7 +38,7 @@ Don't jump to a finished recipe. Talk through the real decisions: which angle to
 
 ## 5. Save — hand to the save contract
 
-You've done the judgment; the writing is mechanical, so don't re-derive it. Assemble the results as structured recipe objects and run the **recipe-save contract** (`desktop-skills/_recipe-saver.md` in the braizent repo — read it once via the connector):
+You've done the judgment; the writing is mechanical, so don't re-derive it. Assemble the results as structured recipe objects and follow the **recipe-save contract** (`_recipe-saver.md`, bundled in this skill folder):
 
 - the user's version as `kind: standard`, carrying `development_notes` and `research_sources`,
 - each notable source version as `kind: reference-variant` (the contract keeps these markdown-only).
