@@ -310,9 +310,9 @@ Once the user approves their personalized version, save it along with the resear
 
 ### A. Save the User's Personalized Version
 
-Generate a recipe filename following the standard convention (lowercase, hyphenated, descriptive).
+Name the recipe with the house convention: lead with the dish, modifiers after a comma in the title (e.g. "Chicken Leg Quarters, Roasted with Potatoes" rather than "Roasted Chicken Leg Quarters with Potatoes"; simple names like "Chicken Tikka Masala" stay as-is). The folder/file slug is that title lowercased and hyphenated.
 
-**Example:** `pad-thai` or `chicken-tikka-masala` or `beef-bourguignon`
+**Example:** `pad-thai`, `chicken-tikka-masala`, `chicken-leg-quarters-roasted-with-potatoes`
 
 Create the directory and main recipe file:
 ```bash
@@ -384,6 +384,15 @@ Use the Write tool to create each variant file with the format:
 ```
 
 Create all variant files.
+
+### C. Generate the Cooklang File
+
+Generate the Cooklang version of the **personalized** recipe so it joins the cooking layer and shows up in CookCLI on the kitchen server:
+
+- Run the `to-cooklang` skill on the new recipe, or write `cook/[recipe-name].cook` directly from the recipe you just saved (YAML frontmatter: title, servings, cuisine, course, time, source, tags; body with `@ingredient{qty%unit}`, `#cookware{}`, `~{timer}` timers, `== Section ==` headers; use `=` to lock to-taste amounts from scaling).
+- The personalized **standard** recipe only - the `_simple`/`_authentic`/`_refined` reference variants stay markdown-only.
+
+The `.cook` is what makes the recipe appear in CookCLI; without it the recipe lives only in the markdown authoring layer.
 
 ---
 
